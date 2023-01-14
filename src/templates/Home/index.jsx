@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 
 const useAsync = (asyncFunction, shouldRun) => {
   const [result, setResult] = useState(null);
@@ -38,28 +44,30 @@ const fetchData = async () => {
 };
 
 export const Home = () => {
-  const [posts, setPosts] = useState(null);
-  const [reFetchData, result, error, status] = useAsync(fetchData, true);
+  const [counted, setCounted] = useState([0, 1, 2, 3, 4]);
+  const divRef = useRef();
 
-  /*   useEffect(() => {
-    reFetchData();
-  }, []); */
+  useLayoutEffect(() => {
+    const now = Date.now();
+    while (Date.now() < now + 3000);
+    divRef.current.scrollTop = divRef.current.scrollHeight;
+  });
 
-  if (status === 'idle') {
-    return <pre>Nada executando</pre>;
-  }
+  const handleClick = () => {
+    setCounted((c) => [...c, +c.slice(-1) + 1]);
+  };
 
-  if (status === 'pending') {
-    return <pre>Loading...</pre>;
-  }
-
-  if (status === 'error') {
-    return <pre>{JSON.stringify(error, null, 2)}</pre>;
-  }
-
-  if (status === 'settled') {
-    return <pre>{JSON.stringify(result, null, 2)}</pre>;
-  }
-
-  return 'Ruim';
+  return (
+    <>
+      <button onClick={handleClick}>Count {counted.slice(-1)}</button>
+      <div
+        ref={divRef}
+        style={{ height: '250px', width: '250px', overflowY: 'scroll' }}
+      >
+        {counted.map((c) => {
+          return <p key={`c-${c}`}>{c}</p>;
+        })}
+      </div>
+    </>
+  );
 };
