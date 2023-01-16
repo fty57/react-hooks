@@ -1,4 +1,10 @@
-import { Children, cloneElement, useState } from 'react';
+import {
+  Children,
+  cloneElement,
+  createContext,
+  useContext,
+  useState,
+} from 'react';
 
 const s = {
   style: {
@@ -14,24 +20,31 @@ const Parent = ({ children }) => {
   });
 };
 
+const TurnOnOffContext = createContext();
+
 const TurnOnOff = ({ children }) => {
   const [isOn, setIsOn] = useState(false);
   const onTurn = () => {
     setIsOn((s) => !s);
   };
 
-  return Children.map(children, (child) => {
-    const newChild = cloneElement(child, {
-      isOn,
-      onTurn,
-    });
-    return newChild;
-  });
+  return (
+    <TurnOnOffContext.Provider value={{ isOn, onTurn }}>
+      {children}
+    </TurnOnOffContext.Provider>
+  );
 };
 
-const TurnedOn = ({ isOn, children }) => (isOn ? children : null);
-const TurnedOff = ({ isOn, children }) => (isOn ? null : children);
-const TurnedButton = ({ isOn, onTurn, ...props }) => {
+const TurnedOn = ({ children }) => {
+  const { isOn } = useContext(TurnOnOffContext);
+  return isOn ? children : null;
+};
+const TurnedOff = ({ children }) => {
+  const { isOn } = useContext(TurnOnOffContext);
+  return isOn ? null : children;
+};
+const TurnedButton = ({ ...props }) => {
+  const { isOn, onTurn } = useContext(TurnOnOffContext);
   return (
     <button onClick={onTurn} {...props}>
       Turn {isOn ? 'OFF' : 'ON'}
@@ -46,13 +59,15 @@ const P = ({ children }) => {
 export const Home = () => {
   return (
     <TurnOnOff>
-      <TurnedOn>
-        <P>Ativo: ON</P>
-      </TurnedOn>
-      <TurnedOff>
-        <P>Desativo: OFF</P>
-      </TurnedOff>
-      <TurnedButton {...s} />
+      <div>
+        <TurnedOn>
+          <P>Ativo: ON</P>
+        </TurnedOn>
+        <TurnedOff>
+          <P>Desativo: OFF</P>
+        </TurnedOff>
+        <TurnedButton {...s} />
+      </div>
     </TurnOnOff>
   );
 };
