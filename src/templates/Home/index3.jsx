@@ -57,6 +57,7 @@ export const Home = () => {
     <div>
       <MyErrorBoundary>
         <ItWillThrowError />
+        <ItWillThrowError />
       </MyErrorBoundary>
       <MyErrorBoundary>
         <ItWillThrowError />
