@@ -10,7 +10,9 @@ export const Menu = () => {
       }}
     >
       <Link to="/">Home</Link>
+      <a href="/">Home (A)</a>
       <Link to="/abc">Abc</Link>
+      <a href="/abc">Abc (A)</a>
     </nav>
   );
 };
