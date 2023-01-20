@@ -7,6 +7,7 @@ import './index.css';
 import { Abc } from './templates/Abc';
 import App from './templates/App';
 import { Home } from './templates/Home/index6';
+import { Page404 } from './templates/Page404';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,8 +16,11 @@ root.render(
       <BrowserRouter>
         <Menu />
         <Switch>
-          <Route path="/abc/:slug?/:id?" component={Abc}></Route>
-          <Route path="/" component={App}></Route>
+          <Route path="/abc/:slug?/:id?" component={Abc} />
+          <Route path="/abc/:slug?" component={Abc} />
+          <Route path="/abc/" component={Abc} />
+          <Route path="/" component={App} exact />
+          <Route path="*" component={Page404} />
         </Switch>
       </BrowserRouter>
     </CounterContextProvider>
