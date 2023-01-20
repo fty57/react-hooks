@@ -15,7 +15,7 @@ root.render(
       <BrowserRouter>
         <Menu />
         <Switch>
-          <Route path="/abc" component={Abc}></Route>
+          <Route path="/abc/:slug?/:id?" component={Abc}></Route>
           <Route path="/" component={App}></Route>
         </Switch>
       </BrowserRouter>
